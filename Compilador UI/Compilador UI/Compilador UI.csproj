@@ -33,7 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Compilador System">
+    <Reference Include="Compilador System, Version=1.0.6607.31692, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Compilador System\Debug\Compilador System.dll</HintPath>
     </Reference>
     <Reference Include="System" />

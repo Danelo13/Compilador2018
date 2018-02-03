@@ -39,7 +39,6 @@ cli::array<System::String^>^ CoSy::cManager::Compile(System::String ^program)
 
 
 
-	compilationDetails[0] = gcnew System::String("Hola Mundo");
 
 
 

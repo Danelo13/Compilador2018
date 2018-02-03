@@ -70,8 +70,8 @@ namespace Compilador_UI
             string[] details = Compilador.Compile(codeBox.Text);
             output.Lines = details;
             string[] tokens = Compilador.GetAllTokens();
+            TokenBox.Lines = tokens;
             
-            output.Lines = tokens;
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)

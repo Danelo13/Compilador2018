@@ -1,0 +1,11 @@
+D:\Compiladores\Compilador UI\Compilador UI\bin\Debug\Compilador UI.exe.config
+D:\Compiladores\Compilador UI\Compilador UI\obj\Debug\Compilador UI.csprojResolveAssemblyReference.cache
+D:\Compiladores\Compilador UI\Compilador UI\obj\Debug\Compilador_UI.MyCompiler.resources
+D:\Compiladores\Compilador UI\Compilador UI\obj\Debug\Compilador_UI.Properties.Resources.resources
+D:\Compiladores\Compilador UI\Compilador UI\obj\Debug\Compilador UI.csproj.GenerateResource.Cache
+D:\Compiladores\Compilador UI\Compilador UI\bin\Debug\Compilador UI.exe
+D:\Compiladores\Compilador UI\Compilador UI\bin\Debug\Compilador UI.pdb
+D:\Compiladores\Compilador UI\Compilador UI\bin\Debug\Compilador System.dll
+D:\Compiladores\Compilador UI\Compilador UI\bin\Debug\Compilador System.pdb
+D:\Compiladores\Compilador UI\Compilador UI\obj\Debug\Compilador UI.exe
+D:\Compiladores\Compilador UI\Compilador UI\obj\Debug\Compilador UI.pdb

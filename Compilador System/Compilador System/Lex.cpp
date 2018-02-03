@@ -27,7 +27,6 @@ CoSy::CLex::~CLex(){}
 
 bool CoSy::CLex::parseCode(const char *src) {
 	int currentLineNumber = 1;
-	int numCharsInLine = 0;
 	int firstLineComment = 0;
 	const char *currentChar = src;
 	const char *currentLine = src;
@@ -43,21 +42,22 @@ bool CoSy::CLex::parseCode(const char *src) {
 	LState = S_START;
 	clearTokens();
 	
-	while (*currentChar != lexSrcEof) {
+	while (*currentChar != lexSrcEof) 
+	{
 		switch (LState) {	
 		case S_START:
 			if (isAlpha(currentChar) || *currentChar == '_')
 			{
 				tokenBuffer.clear();
-				tokenBuffer.append(currentChar, 1);
+				
 				LState = S_PARSING_ID;
-				currentChar++;
+			
 			}
 			else if (isDigit(currentChar)) {
 				tokenBuffer.clear();
-				tokenBuffer.append(currentChar, 1);
+				
 				LState = S_PARSING_INT;
-				currentChar++;
+				
 			}
 			else if (isSpace(currentChar)) 
 			{	// it's space, Ignore
@@ -69,41 +69,43 @@ bool CoSy::CLex::parseCode(const char *src) {
 				}
 				currentChar++;
 			}
-			else if (isArithmeticOp(currentChar)){
-				tokenBuffer.clear();
+			else if (isArithmeticOp(currentChar))
+			{
+				
 
-				if (*currentChar == '/' && *currentChar + 1 == '/')
+				if (  *currentChar == '/' && *currentChar + 1 == '*')
 				{
-					tokenBuffer.append(currentChar, 1);
+					
 					LState = S_PARSING_COMMENT;
-					currentChar++;
+					
+					break;
 				}
 				else
 				{
-					tokenBuffer.append(currentChar, 1);
+					tokenBuffer.clear();
 					LState = S_PARSING_ARITHMETICOP;
-					currentChar++;
+
 				}
 			}
 			else if (isRelationalOp(currentChar)) {
 				tokenBuffer.clear();
 				if (*currentChar == '<')
 				{
-					tokenBuffer.append(currentChar, 1);
+				
 					LState = S_PARSING_LESSTHAN;
-					currentChar++;
+			
 				}
 				else if (*currentChar == '>')
 				{
-					tokenBuffer.append(currentChar, 1);
+		
 					LState = S_PARSING_GREATERTHAN;
-					currentChar++;
+			
 				}
 				else if (*currentChar == '=')
 				{
-					tokenBuffer.append(currentChar, 1);
+		
 					LState = S_PARSING_ASSIGN;
-					currentChar++;
+			
 				}
 			}
 			else if (isLogicalOp(currentChar))
@@ -115,12 +117,11 @@ bool CoSy::CLex::parseCode(const char *src) {
 					currentChar++;
 					if (*currentChar == '&')
 					{
-						tokenBuffer.append(currentChar, 1);
 						LState = S_PARSING_LOGICAL_OP_AND;
-						currentChar++;
 					}
 					else
 					{
+
 						addError(currentLineNumber, "Operador AND invalido", currentLine);
 					}
 				}
@@ -130,9 +131,9 @@ bool CoSy::CLex::parseCode(const char *src) {
 					currentChar++;
 					if (*currentChar == '|')
 					{
-						tokenBuffer.append(currentChar, 1);
+					
 						LState = S_PARSING_LOGICAL_OP_OR;
-						currentChar++;
+				
 					}
 					else
 					{
@@ -141,9 +142,25 @@ bool CoSy::CLex::parseCode(const char *src) {
 				}
 				else if (*currentChar == '!')
 				{
-					tokenBuffer.append(currentChar, 1);
+			
 					LState = S_PARSING_LOGICAL_OP_NOT;
-					currentChar++;
+				
+				}
+			}
+			else if (isSeparator(currentChar))
+			{
+				tokenBuffer.clear();
+				if (*currentChar == ',')
+				{
+					LState = S_PARSING_COMMA;
+				}
+				else if (*currentChar == ':')
+				{
+					LState = S_PARSING_COLON;
+				}
+				else if (*currentChar == ';')
+				{
+					LState = S_PARSING_SEMICOLON;
 				}
 			}
 			else if (isGroupingChar(currentChar))
@@ -151,15 +168,15 @@ bool CoSy::CLex::parseCode(const char *src) {
 				tokenBuffer.clear();
 				if (*currentChar == '(')
 				{
-					tokenBuffer.append(currentChar, 1);
+			
 					LState = S_PARSING_OPENPARENTHESIS;
-					currentChar++;
+		
 				}
 				else if (*currentChar == ')')
 				{
-					tokenBuffer.append(currentChar, 1);
+		
 					LState = S_PARSING_CLOSEPARENTHESIS;
-					currentChar++;
+		
 				}
 			}
 			else if (isBlockChar(currentChar))
@@ -167,15 +184,15 @@ bool CoSy::CLex::parseCode(const char *src) {
 				tokenBuffer.clear();
 				if (*currentChar == '{')
 				{
-					tokenBuffer.append(currentChar, 1);
+				
 					LState = S_PARSING_OPENCURLYBRACKET;
-					currentChar++;
+			
 				}
 				else if (*currentChar == '}')
 				{
-					tokenBuffer.append(currentChar, 1);
+			
 					LState = S_PARSING_CLOSECURLYBRACKET;
-					currentChar++;
+				
 				}
 			}
 			else if (isDimensionChar(currentChar))
@@ -183,20 +200,20 @@ bool CoSy::CLex::parseCode(const char *src) {
 				tokenBuffer.clear();
 				if (*currentChar == '[')
 				{
-					tokenBuffer.append(currentChar, 1);
+				
 					LState = S_PARSING_OPENBRACKET;
-					currentChar++;
+	
 				}
 				else if (*currentChar == ']')
 				{
-					tokenBuffer.append(currentChar, 1);
+			
 					LState = S_PARSING_CLOSEBRACKET;
-					currentChar++;
+		
 				}
 			}
 			else if (isStringLiteral(currentChar))
 			{
-				tokenBuffer.append(currentChar, 1);
+				tokenBuffer.clear();
 				LState = S_PARSING_STRING;
 				currentChar++;
 			}
@@ -210,14 +227,23 @@ bool CoSy::CLex::parseCode(const char *src) {
 			if (isDigit(currentChar)) {
 				tokenBuffer.append(currentChar, 1);
 				currentChar++;
-				if (*currentChar == lexSrcEof) 
+				if (*currentChar == lexSrcEof)
+				{
 					addToken(tokenBuffer.c_str(), TOKEN_TYPE::INT, currentLineNumber);
-				
+				}
 			}
 			else if (*currentChar == '.') {
 				tokenBuffer.append(currentChar, 1);
-				LState = S_PARSING_FLOAT;
 				currentChar++;
+				if (isDigit(currentChar))
+				{
+					LState = S_PARSING_FLOAT;
+				}
+				else
+				{
+					addError(currentLineNumber, "FLOAT INVALIDO", currentLine);
+					LState = S_START;
+				}
 			}
 			else if (isSeparator(currentChar) || isNewLine(currentChar))
 			{
@@ -234,25 +260,16 @@ bool CoSy::CLex::parseCode(const char *src) {
 			{
 				tokenBuffer.append(currentChar, 1);
 				currentChar++;
-				if (*currentChar == lexSrcEof)
-				{
-					if (Keywords.find(tokenBuffer) != Keywords.end())
-					{
-						addToken(tokenBuffer.c_str(), TOKEN_TYPE::FLOAT, currentLineNumber);
-					}
-				}
 			}
-			else
+			else 
 			{
 				addToken(tokenBuffer.c_str(), TOKEN_TYPE::FLOAT, currentLineNumber);
 				LState = S_START;
-				if (!isDigit(currentChar - 1))
-				{
-					addError(currentLineNumber, "Character invalid", currentLine);
-				}
 			}
 			break;
 		case S_PARSING_STRING:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			if (!isStringLiteral(currentChar))
 			{
 				if (*currentChar == lexSrcEof)
@@ -269,11 +286,11 @@ bool CoSy::CLex::parseCode(const char *src) {
 			}
 			break;		
 		case S_PARSING_GREATERTHAN:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			if (*currentChar == '=')
 			{
-				tokenBuffer.append(currentChar, 1);
 				LState = S_PARSING_GREATERTHANOREQUAL;
-				currentChar++;
 			}
 			else
 			{
@@ -282,15 +299,18 @@ bool CoSy::CLex::parseCode(const char *src) {
 			}
 			break;
 		case S_PARSING_GREATERTHANOREQUAL:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::RELATIONAL_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
-		case S_PARSING_LESSTHAN :
-			if (*currentChar == '=')
+			
+		case S_PARSING_LESSTHAN:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
+			if(*currentChar == '=')
 			{
-				tokenBuffer.append(currentChar, 1);
 				LState = S_PARSING_LESSTHANOREQUAL;
-				currentChar++;
 			}
 			else
 			{
@@ -299,16 +319,18 @@ bool CoSy::CLex::parseCode(const char *src) {
 			}
 			break;
 		case S_PARSING_LESSTHANOREQUAL:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::RELATIONAL_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
 
 		case S_PARSING_ASSIGN:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			if (*currentChar == '=')
 			{
-				tokenBuffer.append(currentChar, 1);
 				LState = S_PARSING_EQUAL;
-				currentChar++;
 			}
 			else
 			{
@@ -317,47 +339,52 @@ bool CoSy::CLex::parseCode(const char *src) {
 			}
 			break;
 		case S_PARSING_EQUAL:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::RELATIONAL_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_NOTEQUAL:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::RELATIONAL_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_OPENPARENTHESIS:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::GROUPING_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_CLOSEPARENTHESIS:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::GROUPING_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_ARITHMETICOP:
-			if (currentChar - 1 == "/" && currentChar == "*")
-			{
-				tokenBuffer.append(currentChar, 1);
-				currentChar++;
-				LState = S_PARSING_COMMENT;
-			}
-			else
-			{
-				addToken(tokenBuffer.c_str(), TOKEN_TYPE::ARITHMETIC_OPERATOR, currentLineNumber);
-				LState = S_START;
-			}
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
+			addToken(tokenBuffer.c_str(), TOKEN_TYPE::ARITHMETIC_OPERATOR, currentLineNumber);
+			LState = S_START;
 			break;
 		case S_PARSING_LOGICAL_OP_AND:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::LOGICAL_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_LOGICAL_OP_OR:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::LOGICAL_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_LOGICAL_OP_NOT:
-			if (currentChar == "=")
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
+			if (*currentChar == '=')
 			{
-				tokenBuffer.append(currentChar, 1);
-				currentChar++;
 				LState = S_PARSING_NOTEQUAL;
 			}
 			else
@@ -367,37 +394,115 @@ bool CoSy::CLex::parseCode(const char *src) {
 			}
 			break;
 		case S_PARSING_OPENBRACKET:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::DIMENSION_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_CLOSEBRACKET:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::DIMENSION_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_OPENCURLYBRACKET:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::GROUPING_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_CLOSECURLYBRACKET:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::GROUPING_OPERATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_SEMICOLON:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::SEPARATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_COMMA:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::SEPARATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_COLON:
+			tokenBuffer.append(currentChar, 1);
+			currentChar++;
 			addToken(tokenBuffer.c_str(), TOKEN_TYPE::SEPARATOR, currentLineNumber);
 			LState = S_START;
 			break;
 		case S_PARSING_COMMENT:
+			currentChar++;
+			while (*currentChar != lexSrcEof)
+			{
+				if (*currentChar == '*')
+				{
+					currentChar++;
+					if (*currentChar == '/')
+					{
+						LState = S_START;
+						break;
+					}
+				}
+				else
+				{
+					currentChar++;
+				}
+			}
+			if (*currentChar == lexSrcEof)
+			{
+			
+				addError(currentLineNumber, "Commentario no cerrado", currentLine);
+				break;
+			}
+			currentChar++;
 			break;
-		}
+		default:
+			break;
+		case S_PARSING_ID:
+			if (isAlpha(currentChar) || *currentChar == '_' || isDigit(currentChar))
+			{
+				tokenBuffer.append(currentChar, 1);
+				currentChar++;
+				if (*currentChar == lexSrcEof)
+				{
+					if (Keywords.find(tokenBuffer) != Keywords.end())
+					{
+						addToken(tokenBuffer.c_str(), TOKEN_TYPE::KEYWORD, currentLineNumber);
+					}
+					else if (tokenBuffer.compare("true") == 0 || tokenBuffer.compare("false") == 0)
+					{
+						addToken(tokenBuffer.c_str(), TOKEN_TYPE::LOGICAL_CONST, currentLineNumber);
+					}
+					else
+					{
+						addToken(tokenBuffer.c_str(), TOKEN_TYPE::ID, currentLineNumber);
+					}
+				}
+			}
+			else
+			{
+				if (Keywords.find(tokenBuffer) != Keywords.end())
+				{
+					addToken(tokenBuffer.c_str(), TOKEN_TYPE::KEYWORD, currentLineNumber);
+				}
+				else if (tokenBuffer.compare("true") == 0 || tokenBuffer.compare("false") == 0)
+				{
+					addToken(tokenBuffer.c_str(), TOKEN_TYPE::LOGICAL_CONST, currentLineNumber);
+				}
+				else
+				{
+					addToken(tokenBuffer.c_str(), TOKEN_TYPE::ID, currentLineNumber);
+				}
+				LState = S_START;
+			}
+			break;
 
+		}
 	}
 	return true;
 }
@@ -420,7 +525,8 @@ void CoSy::CLex::clearTokens()
 int CoSy::CLex::getNumTokens() const {
 	return Tokens.size();
 }
-void CoSy::CLex::getTokens(std::vector<CToken *>* tokenVec) const {
+void CoSy::CLex::getTokens(std::vector<CToken *>* tokenVec) const 
+{
 	std::copy(Tokens.begin(), Tokens.end(), std::back_inserter(*tokenVec));
 }
 void CoSy::CLex::addError(int lineNum, const char *desc, const char *line)
