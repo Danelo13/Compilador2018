@@ -8,11 +8,13 @@ CoSy::cManager::cManager()
 {
 	err = gcnew CErrors;
 	lex = new CLex(err);
+	synt = new CSyntax(err, lex);
 
 };
 CoSy::cManager::~cManager() 
 {
 	delete lex;
+	delete synt;
 };
 
 cli::array<System::String^>^ CoSy::cManager::Compile(System::String ^program)
@@ -37,7 +39,7 @@ cli::array<System::String^>^ CoSy::cManager::Compile(System::String ^program)
 
 	lex->parseCode((const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi(program).ToPointer());
 
-
+	// synt->checkSyntax(())
 
 
 

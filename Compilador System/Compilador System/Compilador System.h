@@ -4,6 +4,7 @@
 #include "Lex.h"
 #include "Errors.h"
 #include "Token.h"
+#include "Syntax.h"
 
 
 
@@ -15,6 +16,7 @@ namespace CoSy {
 	private:
 		CLex * lex;
 		CErrors ^ err;
+		CSyntax * synt;
 
 	public:
 		cManager();

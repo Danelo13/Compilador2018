@@ -51,6 +51,7 @@ namespace CoSy {
 
 		map<string, string> Keywords;
 		vector<CToken *> Tokens;
+		int currentToken = 0;
 
 		void addError(int line, const char *desc, const char *nline);
 		void addToken(const char *lex, TOKEN_TYPE type, int lineN);
@@ -72,6 +73,8 @@ namespace CoSy {
 		CLex(CErrors ^ errors);
 		~CLex();
 
+		const CToken* getNextToken();
+		const CToken* peekToken(int num);
 		bool parseCode(const char * src);
 		int getNumTokens() const;
 		void getTokens(std::vector<CToken *> *tokenVec) const;

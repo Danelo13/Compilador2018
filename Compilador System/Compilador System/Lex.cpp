@@ -73,7 +73,7 @@ bool CoSy::CLex::parseCode(const char *src) {
 			{
 				
 
-				if (  *currentChar == '/' && *currentChar + 1 == '*')
+				if (  *currentChar == '/' && *(currentChar + 1) == '*')
 				{
 					
 					LState = S_PARSING_COMMENT;
@@ -521,6 +521,7 @@ void CoSy::CLex::clearTokens()
 		}
 		Tokens.clear();
 	}
+	currentToken = 0;
 }
 int CoSy::CLex::getNumTokens() const {
 	return Tokens.size();
@@ -647,4 +648,17 @@ bool CoSy::CLex::isStringLiteral(const char * c) const
 	}
 
 	return false;
+}
+
+
+const CoSy::CToken* CoSy::CLex::getNextToken() {
+	if (currentToken < Tokens.size()) {
+		return Tokens[currentToken++];
+	}
+	return nullptr;
+}
+const CoSy::CToken* CoSy::CLex::peekToken(int num) {
+	if (((currentToken + num) < Tokens.size()) && (currentToken + num >= 0))
+		return Tokens[currentToken + num];
+	return nullptr;
 }
